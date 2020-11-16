@@ -12,7 +12,7 @@
         {% endif %}
 	{% endfor %}
 {% if ta == False %}
-<center><h1>Search Attendence</h1></center>
+<center><h1>Search Employees</h1></center>
 <div class="row">
 	<div class="col">
 		<div class="card card-body">
@@ -34,22 +34,20 @@
 		<div class="card card-body">
 			<table class="table table-sm">
 				<tr>
-					<th>Student ID</th>
-					<th>Branch</th>
-					<th>Year</th>
-					<th>Section</th>
-					<th>Period</th>
+					<th>Employee ID</th>
+					<th>Employee Name</th>
+					<th>Date</th>
+					<th>Time</th>
 					<th>Status</th>
 				</tr>
 
 				{% for attendence in attendences %}
 
 				<tr>
-                    <td>{{ attendence.Student_ID }}</td>
-					<td>{{ attendence.branch }}</td>
-					<td>{{ attendence.year }}</td>
-					<td>{{ attendence.section }}</td>
-					<td>{{ attendence.period }}</td>
+                    <td>{{ attendence.employee_id }}</td>
+					<td>{{ attendence.employee_name }}</td>
+					<td>{{ attendence.date }}</td>
+					<td>{{ attendence.time }}</td>
 					<td>{{ attendence.status }}</td>
 				</tr>
 				{% endfor %}
@@ -65,22 +63,20 @@
 			<div class="card card-body">
 				<table class="table table-sm">
 					<tr>
-						<th>Student ID</th>
-						<th>Branch</th>
-						<th>Year</th>
-						<th>Section</th>
-						<th>Period</th>
+						<th>Employee ID</th>
+						<th>Employee Name</th>
+						<th>Date</th>
+						<th>Time</th>
 						<th>Status</th>
 					</tr>
 	
 					{% for attendence in attendences %}
 	
 					<tr>
-						<td>{{ attendence.Student_ID }}</td>
-						<td>{{ attendence.branch }}</td>
-						<td>{{ attendence.year }}</td>
-						<td>{{ attendence.section }}</td>
-						<td>{{ attendence.period }}</td>
+						<td>{{ attendence.employee_id }}</td>
+						<td>{{ attendence.employee_name }}</td>
+						<td>{{ attendence.date }}</td>
+						<td>{{ attendence.time }}</td>
 						<td>{{ attendence.status }}</td>
 					</tr>
 					{% endfor %}
