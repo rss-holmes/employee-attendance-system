@@ -1,2 +1,5 @@
 .vscode/
-db.sqlite3
+*.sqlite3
+*.pyc
+*.jpg
+*.png

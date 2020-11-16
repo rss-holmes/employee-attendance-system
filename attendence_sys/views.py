@@ -7,7 +7,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 
 from .forms import *
-from .models import Student, Attendence
+from .models import Employee, Attendence
 from .filters import AttendenceFilter
 
 # from django.views.decorators import gzip
@@ -48,7 +48,7 @@ def home(request):
         employeeForm = CreateEmployeeForm(data=request.POST, files=request.FILES)
         stat = False
         try:
-            employee = Student.objects.get(
+            employee = Employee.objects.get(
                 employee_id=request.POST["employee_id"]
             )
             stat = True
@@ -104,17 +104,16 @@ def updateStudentRedirect(request):
     context = {}
     if request.method == "POST":
         try:
-            reg_id = request.POST["reg_id"]
-            branch = request.POST["branch"]
-            student = Student.objects.get(registration_id=reg_id, branch=branch)
-            updateStudentForm = CreateStudentForm(instance=student)
+            employee_id = request.POST["employee_id"]
+            employee = Employee.objects.get(employee_id=employee_id)
+            updateEmployeeForm = CreateEmployeeForm(instance=employee)
             context = {
-                "form": updateStudentForm,
-                "prev_reg_id": reg_id,
-                "student": student,
+                "form": updateEmployeeForm,
+                "prev_reg_id": employee_id,
+                "employee": employee,
             }
         except:
-            messages.error(request, "Student Not Found")
+            messages.error(request, "Employee Not Found")
             return redirect("home")
     return render(request, "attendence_sys/student_update.html", context)
 
@@ -124,12 +123,12 @@ def updateStudent(request):
     if request.method == "POST":
         context = {}
         try:
-            student = Student.objects.get(registration_id=request.POST["prev_reg_id"])
-            updateStudentForm = CreateStudentForm(
-                data=request.POST, files=request.FILES, instance=student
+            employee = Employee.objects.get(employee_id=request.POST["prev_reg_id"])
+            updateEmployeeForm = CreateEmployeeForm(
+                data=request.POST, files=request.FILES, instance=employee
             )
-            if updateStudentForm.is_valid():
-                updateStudentForm.save()
+            if updateEmployeeForm.is_valid():
+                updateEmployeeForm.save()
                 messages.success(request, "Updation Success")
                 return redirect("home")
         except:
