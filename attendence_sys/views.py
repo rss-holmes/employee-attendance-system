@@ -137,70 +137,111 @@ def updateStudent(request):
     return render(request, "attendence_sys/student_update.html", context)
 
 
+# @login_required(login_url="login")
+# def takeAttendence(request):
+#     if request.method == "POST":
+#         details = {
+#             "branch": request.POST["branch"],
+#             "year": request.POST["year"],
+#             "section": request.POST["section"],
+#             "period": request.POST["period"],
+#             "faculty": request.user.faculty,
+#         }
+#         if (
+#             Attendence.objects.filter(
+#                 date=str(date.today()),
+#                 branch=details["branch"],
+#                 year=details["year"],
+#                 section=details["section"],
+#                 period=details["period"],
+#             ).count()
+#             != 0
+#         ):
+#             messages.error(request, "Attendence already recorded.")
+#             return redirect("home")
+#         else:
+#             students = Student.objects.filter(
+#                 branch=details["branch"],
+#                 year=details["year"],
+#                 section=details["section"],
+#             )
+#             names = Recognizer(details)
+#             for student in students:
+#                 if str(student.registration_id) in names:
+#                     attendence = Attendence(
+#                         Faculty_Name=request.user.faculty,
+#                         Student_ID=str(student.registration_id),
+#                         period=details["period"],
+#                         branch=details["branch"],
+#                         year=details["year"],
+#                         section=details["section"],
+#                         status="Present",
+#                     )
+#                     attendence.save()
+#                 else:
+#                     attendence = Attendence(
+#                         Faculty_Name=request.user.faculty,
+#                         Student_ID=str(student.registration_id),
+#                         period=details["period"],
+#                         branch=details["branch"],
+#                         year=details["year"],
+#                         section=details["section"],
+#                     )
+#                     attendence.save()
+#             attendences = Attendence.objects.filter(
+#                 date=str(date.today()),
+#                 branch=details["branch"],
+#                 year=details["year"],
+#                 section=details["section"],
+#                 period=details["period"],
+#             )
+#             context = {"attendences": attendences, "ta": True}
+#             messages.success(request, "Attendence taking Success")
+#             return render(request, "attendence_sys/attendence.html", context)
+#     context = {}
+#     return render(request, "attendence_sys/home.html", context)
+
 @login_required(login_url="login")
 def takeAttendence(request):
     if request.method == "POST":
         details = {
-            "branch": request.POST["branch"],
-            "year": request.POST["year"],
-            "section": request.POST["section"],
-            "period": request.POST["period"],
-            "faculty": request.user.faculty,
+            "company": request.POST["company"],
         }
-        if (
-            Attendence.objects.filter(
-                date=str(date.today()),
-                branch=details["branch"],
-                year=details["year"],
-                section=details["section"],
-                period=details["period"],
-            ).count()
-            != 0
-        ):
-            messages.error(request, "Attendence already recorded.")
-            return redirect("home")
-        else:
-            students = Student.objects.filter(
-                branch=details["branch"],
-                year=details["year"],
-                section=details["section"],
-            )
-            names = Recognizer(details)
-            for student in students:
-                if str(student.registration_id) in names:
-                    attendence = Attendence(
-                        Faculty_Name=request.user.faculty,
-                        Student_ID=str(student.registration_id),
-                        period=details["period"],
-                        branch=details["branch"],
-                        year=details["year"],
-                        section=details["section"],
-                        status="Present",
-                    )
-                    attendence.save()
-                else:
-                    attendence = Attendence(
-                        Faculty_Name=request.user.faculty,
-                        Student_ID=str(student.registration_id),
-                        period=details["period"],
-                        branch=details["branch"],
-                        year=details["year"],
-                        section=details["section"],
-                    )
-                    attendence.save()
-            attendences = Attendence.objects.filter(
-                date=str(date.today()),
-                branch=details["branch"],
-                year=details["year"],
-                section=details["section"],
-                period=details["period"],
-            )
-            context = {"attendences": attendences, "ta": True}
-            messages.success(request, "Attendence taking Success")
-            return render(request, "attendence_sys/attendence.html", context)
+
+        names = Recognizer(details)
+
+        company_employees = Employee.objects.filter(company=details["company"])
+        for employee in company_employees:
+            if str(employee.employee_id) in names:
+                attendence = Attendence(
+                    Faculty_Name=request.user.faculty,
+                    Student_ID=str(employee.registration_id),
+                    section=details["section"],
+                    status="Present",
+                )
+                attendence.save()
+            else:
+                attendence = Attendence(
+                    Faculty_Name=request.user.faculty,
+                    Student_ID=str(student.registration_id),
+                    period=details["period"],
+                    branch=details["branch"],
+                    year=details["year"],
+                    section=details["section"],
+                )
+                attendence.save()
+        attendences = Attendence.objects.filter(
+            date=str(date.today()),
+            branch=details["branch"],
+            year=details["year"],
+            section=details["section"],
+            period=details["period"],
+        )
+        context = {"attendences": attendences, "ta": True}
+        messages.success(request, "Attendence taking Success")
+        return render(request, "attendence_sys/attendence.html", context)
     context = {}
     return render(request, "attendence_sys/home.html", context)
-
 
 def searchAttendence(request):
     attendences = Attendence.objects.all()

@@ -12,7 +12,7 @@ def Recognizer(details):
 	known_face_names = []
 	base_dir = os.path.dirname(os.path.abspath(__file__))
 	base_dir = os.getcwd()
-	image_dir = os.path.join(base_dir,"{}\{}\{}\{}\{}\{}".format('static','images','Student_Images',details['branch'],details['year'],details['section']))
+	image_dir = os.path.join(base_dir,"{}\{}\{}\{}".format('static','images','Student_Images',details['company']))
 	names = []
 
 

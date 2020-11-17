@@ -19,6 +19,10 @@
                 <center><h3>Take Entry</h3></center>
                 <form class="form-horizontal" action="{% url 'attendence' %}" method="POST">
                     {% csrf_token %}
+                    <div class="form-group">
+                        <label class="control-label">Company Name:</label>
+                        <input name="company" type="text" class="form-control" placeholder="">
+                    </div>
                     <button type="submit" class="btn btn-block btn-info">Take Entry</button>
                 </form>
             </div>
