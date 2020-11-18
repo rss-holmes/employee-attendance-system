@@ -9,7 +9,7 @@ def Recognizer(details):
 	video = cv2.VideoCapture(0)
 
 	if not video.isOpened():
-		video.open()
+		video.open(0)
 
 	known_face_encodings = []
 	known_face_names = []
