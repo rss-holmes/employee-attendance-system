@@ -8,6 +8,9 @@ def Recognizer(details):
 
 	video = cv2.VideoCapture(0)
 
+	if not video.isOpened():
+		video.open()
+
 	known_face_encodings = []
 	known_face_names = []
 	base_dir = os.path.dirname(os.path.abspath(__file__))

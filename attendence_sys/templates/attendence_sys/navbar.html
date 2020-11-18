@@ -17,7 +17,7 @@
   <div class="collapse navbar-collapse" id="navbarNav">
     <ul class="navbar-nav ml-auto">
       <li class="nav-item active">
-        <span class="nav-link">Hello, {{ request.user.faculty }}</span>
+        <span class="nav-link">Hello, {{ request.user.username }}</span>
       </li>
       <li class="nav-item active">
         <a href="{% url 'home' %}" class="nav-link">Home</a>
@@ -25,9 +25,9 @@
       <li class="nav-item active">
         <a href="{% url 'searchattendence' %}" class="nav-link">Search History</a>
       </li>
-      <li class="nav-item active">
+      <!-- <li class="nav-item active">
         <a class="nav-link" href="{% url 'account' %}">Account</a>
-      </li>
+      </li> -->
       <li class="nav-item">
         <a class="nav-link" href="{% url 'logout' %}">Logout</a>
       </li>

@@ -50,6 +50,7 @@ class Employee(models.Model):
     firstname = models.CharField(max_length=200, null=True, blank=True)
     lastname = models.CharField(max_length=200, null=True, blank=True)
     employee_id = models.CharField(max_length=200, null=True)
+    rfid = models.CharField(max_length=200, null=True)
     company_name = models.CharField(max_length=200, null=True, blank=True)
     temperature = models.FloatField()
     spo2 = models.FloatField()
