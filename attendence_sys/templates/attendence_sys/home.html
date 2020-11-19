@@ -20,8 +20,20 @@
                 <form class="form-horizontal" action="{% url 'attendence' %}" method="POST">
                     {% csrf_token %}
                     <div class="form-group">
+                        <label class="control-label">Employee Name:</label>
+                        <input name="employee_name" type="text" class="form-control" placeholder="">
+                    </div>
+                    <div class="form-group">
                         <label class="control-label">Company Name:</label>
-                        <input name="company" type="text" class="form-control" placeholder="">
+                        <input name="company_name" type="text" class="form-control" placeholder="">
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">Employee Id:</label>
+                        <input name="employee_id" type="text" class="form-control" placeholder="">
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">RFID:</label>
+                        <input name="rfid" type="text" class="form-control" placeholder="">
                     </div>
                     <button type="submit" class="btn btn-block btn-info">Take Entry</button>
                 </form>

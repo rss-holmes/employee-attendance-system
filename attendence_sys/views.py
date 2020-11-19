@@ -9,6 +9,7 @@ from django.contrib.auth.decorators import login_required
 from .forms import *
 from .models import Employee, Attendence
 from .filters import AttendenceFilter
+from django.db.models import Q
 
 # from django.views.decorators import gzip
 
@@ -242,6 +243,51 @@ def takeAttendence(request):
         return render(request, "attendence_sys/attendence.html", context)
     context = {}
     return render(request, "attendence_sys/home.html", context)
+
+def mark_attendance(request, company_employees):
+
+    attendances = []
+    for employee in company_employees:
+        attendance = Attendence(
+                        entry_by=request.user.username,
+                        employee_id=employee.employee_id,
+                        employee_name=employee.firstname + ' ' + employee.lastname,
+                        status="Present",
+                    )
+
+        attendance.save()
+        attendances.append(attendance)
+
+    return attendances
+
+@login_required(login_url="login")
+def takeManualAttendence(request):
+    if request.method == "POST":
+        details = {
+            "employee_name": request.POST["employee_name"],
+            "rfid": request.POST["rfid"],
+            "employee_id": request.POST["employee_id"],
+            "company_name": request.POST["company_name"],
+        }
+
+        q_object = Q(company_name=details["company_name"])
+        q_object = q_object & Q(rfid=details["rfid"]) if details["rfid"] else q_object
+        q_object = q_object & Q(employee_id=details["employee_id"]) if details["employee_id"] else q_object
+        q_object = q_object & Q(employee_name=details["employee_name"]) if details["employee_name"] else q_object
+
+        company_employees = Employee.objects.filter(q_object)
+
+        if len(company_employees) == 0:
+            messages.success(request, "No employees could be found matching the details")
+            return render(request, "attendence_sys/attendence.html", {})
+
+        attendences = mark_attendance(request, company_employees)
+        messages.success(request, "Attendence taking Success")
+        return render(request, "attendence_sys/attendence.html", {"attendences": attendences, "ta": True})
+
+    context = {}
+    return render(request, "attendence_sys/home.html", context)
+        
 
 def searchAttendence(request):
     attendences = Attendence.objects.all()
