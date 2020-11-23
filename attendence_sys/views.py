@@ -205,40 +205,30 @@ def updateStudent(request):
 @login_required(login_url="login")
 def takeAttendence(request):
     if request.method == "POST":
-        details = {
-            "company": request.POST["company"],
-        }
 
-        names = Recognizer(details)
+        names = Recognizer({})
 
-        company_employees = Employee.objects.filter(company=details["company"])
+        company_employees = Employee.objects.all()
         for employee in company_employees:
             if str(employee.employee_id) in names:
-                attendence = Attendence(
-                    Faculty_Name=request.user.faculty,
-                    Student_ID=str(employee.registration_id),
-                    section=details["section"],
-                    status="Present",
-                )
-                attendence.save()
+                attendance = Attendence(
+                        entry_by=request.user.username,
+                        employee_id=employee.employee_id,
+                        employee_name=employee.firstname + ' ' + employee.lastname,
+                        status="Present",
+                    )
+                attendance.save()
             else:
-                attendence = Attendence(
-                    Faculty_Name=request.user.faculty,
-                    Student_ID=str(student.registration_id),
-                    period=details["period"],
-                    branch=details["branch"],
-                    year=details["year"],
-                    section=details["section"],
-                )
-                attendence.save()
-        attendences = Attendence.objects.filter(
-            date=str(date.today()),
-            branch=details["branch"],
-            year=details["year"],
-            section=details["section"],
-            period=details["period"],
+                attendance = Attendence(
+                        entry_by=request.user.username,
+                        employee_id=employee.employee_id,
+                        employee_name=employee.firstname + ' ' + employee.lastname,
+                    )
+                attendance.save()
+        todays_attendences = Attendence.objects.filter(
+            date=str(date.today())
         )
-        context = {"attendences": attendences, "ta": True}
+        context = {"attendences": todays_attendences, "ta": True}
         messages.success(request, "Attendence taking Success")
         return render(request, "attendence_sys/attendence.html", context)
     context = {}
@@ -270,7 +260,8 @@ def takeManualAttendence(request):
             "company_name": request.POST["company_name"],
         }
 
-        q_object = Q(company_name=details["company_name"])
+        q_object = Q()
+        q_object = q_object & Q(rfid=details["company_name"]) if details["company_name"] else q_object
         q_object = q_object & Q(rfid=details["rfid"]) if details["rfid"] else q_object
         q_object = q_object & Q(employee_id=details["employee_id"]) if details["employee_id"] else q_object
         q_object = q_object & Q(employee_name=details["employee_name"]) if details["employee_name"] else q_object
