@@ -254,17 +254,13 @@ def mark_attendance(request, company_employees):
 def takeManualAttendence(request):
     if request.method == "POST":
         details = {
-            "employee_name": request.POST["employee_name"],
             "rfid": request.POST["rfid"],
             "employee_id": request.POST["employee_id"],
-            "company_name": request.POST["company_name"],
         }
 
         q_object = Q()
-        q_object = q_object & Q(rfid=details["company_name"]) if details["company_name"] else q_object
         q_object = q_object & Q(rfid=details["rfid"]) if details["rfid"] else q_object
         q_object = q_object & Q(employee_id=details["employee_id"]) if details["employee_id"] else q_object
-        q_object = q_object & Q(employee_name=details["employee_name"]) if details["employee_name"] else q_object
 
         company_employees = Employee.objects.filter(q_object)
 
