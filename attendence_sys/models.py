@@ -35,15 +35,13 @@ class Faculty(models.Model):
 #         instance.branch, instance.year, instance.section, filename
 #     )
 
+
 def employee_directory_path(instance, filename):
     name, ext = filename.split(".")
-    name = (
-        instance.employee_id
-    )
+    name = instance.employee_id
     filename = name + "." + ext
-    return "Student_Images/{}/{}".format(
-        instance.company_name, filename
-    )
+    return "employee_images/{}".format(filename)
+
 
 class Employee(models.Model):
 
@@ -114,6 +112,7 @@ class Employee(models.Model):
 
 #     def __str__(self):
 #         return str(self.Student_ID + "_" + str(self.date) + "_" + str(self.period))
+
 
 class Attendence(models.Model):
     entry_by = models.CharField(max_length=200, null=True, blank=True)

@@ -17,25 +17,24 @@
         <div class="col-md-6" style="margin-top: 20px;">
             <div class="card card-body">
                 <center><h3>Take Entry</h3></center>
-                <form class="form-horizontal" action="{% url 'attendence' %}" method="POST">
+                <form class="form-horizontal" action="{% url 'manualAttendence' %}" method="POST">
                     {% csrf_token %}
                     <div class="form-group">
-                        <label class="control-label">Employee Name:</label>
-                        <input name="employee_name" type="text" class="form-control" placeholder="">
-                    </div>
-                    <div class="form-group">
-                        <label class="control-label">Company Name:</label>
-                        <input name="company_name" type="text" class="form-control" placeholder="">
-                    </div>
-                    <div class="form-group">
                         <label class="control-label">Employee Id:</label>
-                        <input name="employee_id" type="text" class="form-control" placeholder="">
+                        <input name="employee_id" id="employee_id" type="text" class="form-control" placeholder="">
                     </div>
                     <div class="form-group">
                         <label class="control-label">RFID:</label>
-                        <input name="rfid" type="text" class="form-control" placeholder="">
+                        <input name="rfid" id="rfid" type="text" class="form-control" placeholder="">
                     </div>
                     <button type="submit" class="btn btn-block btn-info">Take Entry</button>
+                </form>
+                <center>
+                    <h5>OR</h3>
+                </center>
+                <form class="form-horizontal" action="{% url 'attendence' %}" method="POST">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-block btn-info">Take Photo Entry</button>
                 </form>
             </div>
         </div>

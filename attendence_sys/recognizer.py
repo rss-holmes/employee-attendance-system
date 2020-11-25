@@ -17,6 +17,7 @@ def Recognizer(details):
 	base_dir = os.getcwd()
 	# image_dir = os.path.join(base_dir,"{}\{}\{}\{}".format('static','images','Student_Images',details['company']))
 	image_dir = os.path.join(base_dir,"{}\{}\{}".format('static','images','employee_images'))
+	print("Directory  where employee images are being checked - " + str(image_dir))
 	names = []
 
 	for root,dirs,files in os.walk(image_dir):
