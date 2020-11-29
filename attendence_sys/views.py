@@ -206,7 +206,7 @@ def updateStudent(request):
 def takeAttendence(request):
     if request.method == "POST":
 
-        names = Recognizer({})
+        names = Recognizer()
 
         company_employees = Employee.objects.all()
         for employee in company_employees:
@@ -218,18 +218,21 @@ def takeAttendence(request):
                         status="Present",
                     )
                 attendance.save()
-            else:
-                attendance = Attendence(
-                        entry_by=request.user.username,
-                        employee_id=employee.employee_id,
-                        employee_name=employee.firstname + ' ' + employee.lastname,
-                    )
-                attendance.save()
+            # else:
+            #     attendance = Attendence(
+            #             entry_by=request.user.username,
+            #             employee_id=employee.employee_id,
+            #             employee_name=employee.firstname + ' ' + employee.lastname,
+            #         )
+            #     attendance.save()
         todays_attendences = Attendence.objects.filter(
             date=str(date.today())
         )
         context = {"attendences": todays_attendences, "ta": True}
-        messages.success(request, "Attendence taking Success")
+        if len(names) == 0:
+            messages.error(request, "No employee could be identified in the capture.")
+        else:
+            messages.success(request, "Attendence taking Success.Employees identified :: " + str(names))
         return render(request, "attendence_sys/attendence.html", context)
     context = {}
     return render(request, "attendence_sys/home.html", context)
