@@ -1,7 +1,7 @@
 {% extends 'attendence_sys/main.html' %}
 
 {% block content %}
-<div class="container">
+<div class="container" id="main_container">
     {% for message in messages %}
         {% if message.tags == 'error' %}
             <div class="alert alert-danger">
@@ -17,7 +17,7 @@
         <div class="col-md-6" style="margin-top: 20px;">
             <div class="card card-body">
                 <center><h3>Take Entry</h3></center>
-                <form class="form-horizontal" action="{% url 'manualAttendence' %}" method="POST">
+                <form class="form-horizontal" action="{% url 'manualAttendence' %}" method="POST" >
                     {% csrf_token %}
                     <div class="form-group">
                         <label class="control-label">Employee Id:</label>
@@ -30,10 +30,13 @@
                     <button type="submit" class="btn btn-block btn-info">Take Entry</button>
                 </form>
                 <center>
-                    <h5>OR</h3>
+                    <h3>OR</h3>
                 </center>
-                <form class="form-horizontal" action="{% url 'attendence' %}" method="POST">
+                <form class="form-horizontal" action="{% url 'attendence' %}" method="POST" enctype="multipart/form-data">
                     {% csrf_token %}
+                    <div id="camera" style="height:auto;width:auto; text-align:left;"></div>
+                    <input type="button" value="Take a Snap" id="btPic" onclick="takeSnapShot()" />
+                    <p id="snapShot"></p>
                     <button type="submit" class="btn btn-block btn-info">Take Photo Entry</button>
                 </form>
             </div>
@@ -140,4 +143,31 @@
         </div> -->
     </div>
 </div>
+<script>
+    Webcam.set({
+        width: 480,
+        height: 480,
+        image_format: 'jpeg',
+        jpeg_quality: 100
+    });
+    Webcam.attach('#camera');
+
+    // SHOW THE SNAPSHOT.
+    takeSnapShot = function () {
+        Webcam.snap(function (data_uri) {
+            document.getElementById('snapShot').innerHTML =
+                '<img src="' + data_uri + '" width="70px" height="50px" id="process_picture"/>';
+        });
+
+        var base64image = document.getElementById("process_picture").src;
+        Webcam.upload( base64image, "{% url 'attendence' %}", function(code, text) {
+          console.log('Save successfully');
+          console.log(text);
+          $('#main_container').empty();
+          $('#main_container').append(text);
+         });
+
+        Webcam.reset();
+    }
+</script>
 {% endblock %}

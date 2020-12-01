@@ -5,11 +5,14 @@ from django.contrib import messages
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
-
+from django.views.decorators.csrf import csrf_exempt
 from .forms import *
 from .models import Employee, Attendence
 from .filters import AttendenceFilter
 from django.db.models import Q
+import os
+from django.core.files.storage import default_storage
+from django.core.files.base import ContentFile
 
 # from django.views.decorators import gzip
 
@@ -202,11 +205,15 @@ def updateStudent(request):
 #     context = {}
 #     return render(request, "attendence_sys/home.html", context)
 
+@csrf_exempt
 @login_required(login_url="login")
 def takeAttendence(request):
     if request.method == "POST":
+        image = request.FILES['webcam']
+        temp_file_path = default_storage.save('temp/c1.jpg', ContentFile(image.read()))
+        # tmp_file = os.path.join(settings.MEDIA_ROOT, path)
 
-        names = Recognizer()
+        names = Recognizer(temp_file_path)
 
         company_employees = Employee.objects.all()
         for employee in company_employees:

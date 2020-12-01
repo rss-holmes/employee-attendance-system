@@ -3,22 +3,23 @@ import cv2
 import os
 from azure.cognitiveservices.vision.face import FaceClient
 from msrest.authentication import CognitiveServicesCredentials
+from django.conf import settings
 
-
-def Recognizer():
-    video = cv2.VideoCapture(0)
-
-    while (True):
-        check, frame = video.read()
-        cv2.imshow('img1', frame)  # display the captured image
-        if cv2.waitKey(1) & 0xFF == ord('y'):  # save on pressing 'y'
-            # img_str = cv2.imencode('.jpg', frame)[1].tostring()
-            image_save_url = os.path.join(os.getcwd(), "{}\{}\{}\c1.png".format('static', 'images', 'temp'))
-            cv2.imwrite(image_save_url, frame)
-            cv2.destroyAllWindows()
-            break
-
-    video.release()
+def Recognizer(temp_file_path):
+    # video = cv2.VideoCapture(0)
+    #     #
+    #     # while (True):
+    #     #     check, frame = video.read()
+    #     #     cv2.imshow('img1', frame)  # display the captured image
+    #     #     if cv2.waitKey(1) & 0xFF == ord('y'):  # save on pressing 'y'
+    #     #         # img_str = cv2.imencode('.jpg', frame)[1].tostring()
+    #     #         image_save_url = os.path.join(os.getcwd(), "{}\{}\{}\c1.png".format('static', 'images', 'temp'))
+    #     #         cv2.imwrite(image_save_url, frame)
+    #     #         cv2.destroyAllWindows()
+    #     #         break
+    #     #
+    #     # video.release()
+    image_save_url = os.path.join(settings.MEDIA_ROOT, temp_file_path)
     employee_ids = check_capture(image_save_url)
     return employee_ids
 
