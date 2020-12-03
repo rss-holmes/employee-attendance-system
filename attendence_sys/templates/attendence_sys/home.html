@@ -34,10 +34,13 @@
                 </center>
                 <form class="form-horizontal" action="{% url 'attendence' %}" method="POST" enctype="multipart/form-data">
                     {% csrf_token %}
-                    <div id="camera" style="height:auto;width:auto; text-align:left;"></div>
-                    <input type="button" value="Take a Snap" id="btPic" onclick="takeSnapShot()" />
-                    <p id="snapShot"></p>
-                    <button type="submit" class="btn btn-block btn-info">Take Photo Entry</button>
+{#                    <div id="camera" style="height:auto;width:auto; text-align:left;"></div>#}
+{#                    <input type="button" value="Take a Snap" id="btPic" onclick="takeSnapShot()" />#}
+{#                    <p id="snapShot"></p>#}
+                    <video id="webcam" autoplay playsinline width="640" height="480"></video>
+                    <canvas id="canvas" class="d-none"></canvas>
+                    <button class="btn btn-block btn-info" onclick="takeSnapShot()" >Take Photo Entry</button>
+
                 </form>
             </div>
         </div>
@@ -144,31 +147,45 @@
     </div>
 </div>
 <script>
-    Webcam.set({
-        width: 480,
-        height: 480,
-        image_format: 'jpeg',
-        jpeg_quality: 100,
-        force_flash: true
-    });
-    Webcam.attach('#camera');
 
-    // SHOW THE SNAPSHOT.
-    takeSnapShot = function () {
-        Webcam.snap(function (data_uri) {
-            document.getElementById('snapShot').innerHTML =
-                '<img src="' + data_uri + '" width="70px" height="50px" id="process_picture"/>';
-        });
+    const webcamElement = document.getElementById('webcam');
+    const canvasElement = document.getElementById('canvas');
+    const snapSoundElement = document.getElementById('snapSound');
+    const webcam = new Webcam(webcamElement, 'user', canvasElement, snapSoundElement);
 
-        var base64image = document.getElementById("process_picture").src;
-        Webcam.upload( base64image, "{% url 'attendence' %}", function(code, text) {
-          console.log('Save successfully');
-          console.log(text);
-          $('#main_container').empty();
-          $('#main_container').append(text);
-         });
+    webcam.start()
+       .then(result =>{
+          console.log("webcam started");
+       })
+       .catch(err => {
+           console.log(err);
+       });
 
-        Webcam.reset();
-    }
+
+    {#Webcam.set({#}
+    {#    width: 480,#}
+    {#    height: 480,#}
+    {#    image_format: 'jpeg',#}
+    {#    jpeg_quality: 100,#}
+    {#});#}
+    {#Webcam.attach('#camera');#}
+    {##}
+    {#// SHOW THE SNAPSHOT.#}
+    {#takeSnapShot = function () {#}
+    {#    Webcam.snap(function (data_uri) {#}
+    {#        document.getElementById('snapShot').innerHTML =#}
+    {#            '<img src="' + data_uri + '" width="70px" height="50px" id="process_picture"/>';#}
+    {#    });#}
+    {##}
+    {#    var base64image = document.getElementById("process_picture").src;#}
+    {#    Webcam.upload( base64image, "{% url 'attendence' %}", function(code, text) {#}
+    {#      console.log('Save successfully');#}
+    {#      console.log(text);#}
+    {#      $('#main_container').empty();#}
+    {#      $('#main_container').append(text);#}
+    {#     });#}
+    {##}
+    {#    Webcam.reset();#}
+    {#}#}
 </script>
 {% endblock %}
