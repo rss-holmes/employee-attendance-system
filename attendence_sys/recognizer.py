@@ -28,7 +28,8 @@ def check_capture(image_save_url):
     KEY = '4794e1e9ff6a41728e793d581b065d43'
     ENDPOINT = 'https://face-rec-instance.cognitiveservices.azure.com/'
     base_dir = os.getcwd()
-    IMAGE_BASE_URL = os.path.join(base_dir, "{}\{}\{}".format('static', 'images', 'employee_images'))
+    base_dir = '/home/ubuntu/attendance/'
+    IMAGE_BASE_URL = os.path.join(base_dir, "{}/{}/{}".format('static', 'images', 'employee_images'))
     face_client = FaceClient(ENDPOINT, CognitiveServicesCredentials(KEY))
 
     employee_ids = list()
