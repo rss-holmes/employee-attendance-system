@@ -34,14 +34,10 @@
                 </center>
                 <form class="form-horizontal" action="{% url 'attendence' %}" method="POST" enctype="multipart/form-data">
                     {% csrf_token %}
-{#                    <div id="camera" style="height:auto;width:auto; text-align:left;"></div>#}
-{#                    <input type="button" value="Take a Snap" id="btPic" onclick="takeSnapShot()" />#}
-{#                    <p id="snapShot"></p>#}
-                    <video id="webcam" autoplay playsinline width="640" height="480"></video>
-                    <canvas id="canvas" class="d-none"></canvas>
-                    <button class="btn btn-block btn-info" onclick="takeSnapShot()" >Take Photo Entry</button>
-
                 </form>
+                <video id="webcam" autoplay playsinline width="480" height="480"></video>
+                <canvas id="canvas" class="d-none"></canvas>
+                <button class="btn btn-block btn-info" onclick="takeSnapShot()" >Take Photo Entry</button>
             </div>
         </div>
         <div class="col-md-6" style="margin-top: 20px;">
@@ -155,37 +151,49 @@
 
     webcam.start()
        .then(result =>{
-          console.log("webcam started");
        })
        .catch(err => {
            console.log(err);
        });
 
+    function dataURItoBlob(dataURI) {
+        // convert base64/URLEncoded data component to raw binary data held in a string
+        var byteString;
+        if (dataURI.split(',')[0].indexOf('base64') >= 0)
+            byteString = atob(dataURI.split(',')[1]);
+        else
+            byteString = unescape(dataURI.split(',')[1]);
 
-    {#Webcam.set({#}
-    {#    width: 480,#}
-    {#    height: 480,#}
-    {#    image_format: 'jpeg',#}
-    {#    jpeg_quality: 100,#}
-    {#});#}
-    {#Webcam.attach('#camera');#}
-    {##}
-    {#// SHOW THE SNAPSHOT.#}
-    {#takeSnapShot = function () {#}
-    {#    Webcam.snap(function (data_uri) {#}
-    {#        document.getElementById('snapShot').innerHTML =#}
-    {#            '<img src="' + data_uri + '" width="70px" height="50px" id="process_picture"/>';#}
-    {#    });#}
-    {##}
-    {#    var base64image = document.getElementById("process_picture").src;#}
-    {#    Webcam.upload( base64image, "{% url 'attendence' %}", function(code, text) {#}
-    {#      console.log('Save successfully');#}
-    {#      console.log(text);#}
-    {#      $('#main_container').empty();#}
-    {#      $('#main_container').append(text);#}
-    {#     });#}
-    {##}
-    {#    Webcam.reset();#}
-    {#}#}
+        // separate out the mime component
+        var mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0];
+
+        // write the bytes of the string to a typed array
+        var ia = new Uint8Array(byteString.length);
+        for (var i = 0; i < byteString.length; i++) {
+            ia[i] = byteString.charCodeAt(i);
+        }
+
+        return new Blob([ia], {type:mimeString});
+    }
+
+    takeSnapShot = function (){
+        var picture = webcam.snap();
+        var blob = dataURItoBlob(picture);
+        var form = new FormData();
+        form.append("webcam", blob);
+        $.ajax({
+            url: {% url 'attendence' %},
+            data: form,
+            processData: false,
+            contentType: false,
+            type: 'POST',
+            success: function(data) {
+                console.log("successfully taken attendance")
+                $('#main_container').empty();
+                $('#main_container').append(data);
+            }
+        });
+    }
+
 </script>
 {% endblock %}
