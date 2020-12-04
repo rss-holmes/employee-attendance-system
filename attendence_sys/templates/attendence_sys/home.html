@@ -35,8 +35,8 @@
                 <div class="row" >
 
                     <video id="webcam" autoplay playsinline width="400px" height="400px" style="margin-left: 40px; margin-right: 40px"></video>
-
                     <canvas id="canvas" class="d-none"></canvas>
+                    <button class="btn btn-block btn-info" onclick="flipCamera()" >Flip Camera</button>
                     <button class="btn btn-block btn-info" onclick="takeSnapShot()" >Take Photo Entry</button>
                 </div>
             </div>
@@ -187,6 +187,10 @@
                 $('#main_container').append(data);
             }
         });
+    }
+
+    flipCamera = function (){
+        webcam.flip()
     }
 
 </script>
