@@ -190,7 +190,9 @@
     }
 
     flipCamera = function (){
+        webcam.stop()
         webcam.flip()
+        webcam.start()
     }
 
 </script>
