@@ -14,7 +14,7 @@
         {% endif %}
     {% endfor %}
     <div class="row">
-        <div class="col-md-6" style="margin-top: 20px;">
+        <div class="col-md-6 col-sm-12 col xs-12" style="margin-top: 20px;">
             <div class="card card-body">
                 <center><h3>Take Entry</h3></center>
                 <form class="form-horizontal" action="{% url 'manualAttendence' %}" method="POST" >
@@ -32,15 +32,12 @@
                 <center>
                     <h3>OR</h3>
                 </center>
-                <form class="form-horizontal" action="{% url 'attendence' %}" method="POST" enctype="multipart/form-data">
-                    {% csrf_token %}
-                </form>
-                <video id="webcam" autoplay playsinline width="480" height="480"></video>
+                <video id="webcam" autoplay playsinline width="100%" height="100%"></video>
                 <canvas id="canvas" class="d-none"></canvas>
                 <button class="btn btn-block btn-info" onclick="takeSnapShot()" >Take Photo Entry</button>
             </div>
         </div>
-        <div class="col-md-6" style="margin-top: 20px;">
+        <div class="col-md-6 col-sm-12 col xs-12" style="margin-top: 20px;">
             <div class="card card-body">
                 <center><h3>Add Employee</h3></center>
                 <form class="form-horizontal" action="" method="POST" enctype="multipart/form-data">
@@ -118,10 +115,7 @@
     </div>
 
     <div class="row">
-
-        <div class="col-md-6" style="margin-top: 20px;"></div>
-        
-        <div class="col-md-6" style="margin-top: 20px;">
+        <div class="col-md-6 col-sm-12 col xs-12" style="margin-top: 20px;">
             <div class="card card-body">
                 <center><h3>Update Employee Details</h3></center>
                 <form class="form-horizontal" action="{% url 'updateStudentRedirect' %}" method="POST">
@@ -134,12 +128,7 @@
                 </form>
             </div>
         </div>
-        <!-- <div class="col-md-6" style="margin-top: 20px;;">
-            <div class="card card-body">
-                <center><h3>Search History</h3></center>
-                    <a href="{% url 'searchattendence' %}" class="btn btn-block btn-info">Click Here</a>
-            </div>
-        </div> -->
+        <div class="col-md-6 col-sm-12 col xs-12" style="margin-top: 20px;"></div>
     </div>
 </div>
 <script>
@@ -189,6 +178,7 @@
             type: 'POST',
             success: function(data) {
                 console.log("successfully taken attendance")
+                webcam.stop();
                 $('#main_container').empty();
                 $('#main_container').append(data);
             }
