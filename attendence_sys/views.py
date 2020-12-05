@@ -19,32 +19,6 @@ from django.core.files.base import ContentFile
 from .recognizer import Recognizer
 from datetime import date
 
-# @login_required(login_url = 'login')
-# def home(request):
-#     studentForm = CreateStudentForm()
-
-#     if request.method == 'POST':
-#         studentForm = CreateStudentForm(data = request.POST, files=request.FILES)
-#         # print(request.POST)
-#         stat = False
-#         try:
-#             student = Student.objects.get(registration_id = request.POST['registration_id'])
-#             stat = True
-#         except:
-#             stat = False
-#         if studentForm.is_valid() and (stat == False):
-#             studentForm.save()
-#             name = studentForm.cleaned_data.get('firstname') +" " +studentForm.cleaned_data.get('lastname')
-#             messages.success(request, 'Student ' + name + ' was successfully added.')
-#             return redirect('home')
-#         else:
-#             messages.error(request, 'Student with Registration Id '+request.POST['registration_id']+' already exists.')
-#             return redirect('home')
-
-#     context = {'studentForm':studentForm}
-#     return render(request, 'attendence_sys/home.html', context)
-
-
 @login_required(login_url="login")
 def home(request):
 
@@ -141,70 +115,6 @@ def updateStudent(request):
     return render(request, "attendence_sys/student_update.html", context)
 
 
-# @login_required(login_url="login")
-# def takeAttendence(request):
-#     if request.method == "POST":
-#         details = {
-#             "branch": request.POST["branch"],
-#             "year": request.POST["year"],
-#             "section": request.POST["section"],
-#             "period": request.POST["period"],
-#             "faculty": request.user.faculty,
-#         }
-#         if (
-#             Attendence.objects.filter(
-#                 date=str(date.today()),
-#                 branch=details["branch"],
-#                 year=details["year"],
-#                 section=details["section"],
-#                 period=details["period"],
-#             ).count()
-#             != 0
-#         ):
-#             messages.error(request, "Attendence already recorded.")
-#             return redirect("home")
-#         else:
-#             students = Student.objects.filter(
-#                 branch=details["branch"],
-#                 year=details["year"],
-#                 section=details["section"],
-#             )
-#             names = Recognizer(details)
-#             for student in students:
-#                 if str(student.registration_id) in names:
-#                     attendence = Attendence(
-#                         Faculty_Name=request.user.faculty,
-#                         Student_ID=str(student.registration_id),
-#                         period=details["period"],
-#                         branch=details["branch"],
-#                         year=details["year"],
-#                         section=details["section"],
-#                         status="Present",
-#                     )
-#                     attendence.save()
-#                 else:
-#                     attendence = Attendence(
-#                         Faculty_Name=request.user.faculty,
-#                         Student_ID=str(student.registration_id),
-#                         period=details["period"],
-#                         branch=details["branch"],
-#                         year=details["year"],
-#                         section=details["section"],
-#                     )
-#                     attendence.save()
-#             attendences = Attendence.objects.filter(
-#                 date=str(date.today()),
-#                 branch=details["branch"],
-#                 year=details["year"],
-#                 section=details["section"],
-#                 period=details["period"],
-#             )
-#             context = {"attendences": attendences, "ta": True}
-#             messages.success(request, "Attendence taking Success")
-#             return render(request, "attendence_sys/attendence.html", context)
-#     context = {}
-#     return render(request, "attendence_sys/home.html", context)
-
 @csrf_exempt
 @login_required(login_url="login")
 def takeAttendence(request):
@@ -225,13 +135,7 @@ def takeAttendence(request):
                         status="Present",
                     )
                 attendance.save()
-            # else:
-            #     attendance = Attendence(
-            #             entry_by=request.user.username,
-            #             employee_id=employee.employee_id,
-            #             employee_name=employee.firstname + ' ' + employee.lastname,
-            #         )
-            #     attendance.save()
+
         todays_attendences = Attendence.objects.filter(
             date=str(date.today())
         )
@@ -268,6 +172,10 @@ def takeManualAttendence(request):
             "employee_id": request.POST["employee_id"],
         }
 
+        if not details.get('rfid', None) and not details.get('employee_id', None) :
+            messages.error(request, "No employees details were entered by the user.")
+            return render(request, "attendence_sys/attendence.html", {})
+
         q_object = Q()
         q_object = q_object & Q(rfid=details["rfid"]) if details["rfid"] else q_object
         q_object = q_object & Q(employee_id=details["employee_id"]) if details["employee_id"] else q_object
@@ -275,7 +183,7 @@ def takeManualAttendence(request):
         company_employees = Employee.objects.filter(q_object)
 
         if len(company_employees) == 0:
-            messages.success(request, "No employees could be found matching the details")
+            messages.error(request, "No employees could be found matching the details")
             return render(request, "attendence_sys/attendence.html", {})
 
         attendences = mark_attendance(request, company_employees)
